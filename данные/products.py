@@ -14,10 +14,4 @@ class Products(SqlAlchemyBase):
     photo = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     tags = sqlalchemy.Column(sqlalchemy.JSON, nullable=True)
     about = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    #created_date = sqlalchemy.Column(sqlalchemy.DateTime, defult=datetime.datetime.now)
     cost = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
-    views = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
-    # is_private = sqlalchemy.Column(sqlalchemy.Boolean, default=True)
-
-    #user = orm.relation('User')
-    #news = orm.relation("News", back_populates='user')
