@@ -4,23 +4,17 @@ from main2 import MY_BOT
 
 
 def bot_logic(update, context, last_message_id=0):
-    print(type(update))
-    print(context.user_data["scene_num"])
     if context.user_data["scene_num"] in ["-02", "-002", "-0002", "-00002", "-000002", "-0000002"]:
         context.user_data["scene_2_test"] = 1
     if context.user_data["scene_num"] == "0":
         if context.user_data.get("auth_user") == "0":
-            print("НУ И ИЛИ НАФИГ")
+            print("НУ И ИДИ НАФИГ")
         else:
             # в дальнейшем обращаемся к данным пользователя:
-            print("Давайте создадим вам аккаунт!")
-            print(update.to_dict().keys())
-            print(update.to_dict()['callback_query'].keys())
             id = update.to_dict()['callback_query']['message']['chat']["id"]
             username = update.to_dict()['callback_query']['message']['chat']["first_name"]
             if not test_user_id(id):
                 new_line("users", username=username, telegram_id=id)
-            print("Аккаунт есть, прогружаем меню")
             context.user_data["user_id"] = id
             context.user_data["user_name"] = username
             context.user_data["scene_num"] = "1"
@@ -126,7 +120,6 @@ def bot_logic(update, context, last_message_id=0):
         if orders:
             product = orders[context.user_data["search_list_index"]]
             with open(f"{product.photo}", "rb") as my_file:
-                print(product.photo)
                 MY_BOT.send_photo(context.user_data["user_id"], my_file.read())
             MY_BOT.send_message(context.user_data["user_id"], f"Заказ на продажу: {product.title}\n"
                                                               f"Описание: {product.about}\n"

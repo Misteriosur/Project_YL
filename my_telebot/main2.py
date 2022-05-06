@@ -28,6 +28,8 @@ logger = logging.getLogger(__name__)
 MY_BOT = telegram.ext.ExtBot(TOKEN)
 command_list = ["/start", "/help", "/address", "/phone", "/mail", "/work_time"]
 
+TASK_LIST = []
+
 
 def start(update, context):
     context.user_data["scene_num"] = "0"
@@ -44,10 +46,7 @@ def menu(update, context):
     #print(markup2.inline_keyboard)
 
 
-async def get_callback(callback, context):
-    print(type(callback))
-    print(callback.to_dict())
-    print("main", context.user_data["scene_num"])
+def get_callback(callback, context):
     last_message = callback.to_dict().get("callback_query").get("message").get("message_id")
     if context.user_data["scene_num"] == "0":
         if callback.to_dict().get("callback_query").get("data") == "btn00":
@@ -191,9 +190,6 @@ async def get_callback(callback, context):
 
 
 def get_messages(callback, context):
-    print(type(callback))
-    print(callback.to_dict())
-    print("message", context.user_data["scene_num"])
     if context.user_data["scene_num"] == "02":
 
         context.user_data["sell_name"] = callback.to_dict()["message"]["text"]
@@ -211,11 +207,7 @@ def get_messages(callback, context):
             context.user_data["scene_2_test"] = 0
         bot_logic(callback, context)
     elif context.user_data["scene_num"] == "0002":
-        print(callback.to_dict()["message"]["photo"][0]["file_id"])
-        print(callback.message.photo)
-        print(callback)
         bot = telegram.ext.ExtBot(TOKEN)
-        print(bot.get_file(file_id=callback.to_dict()["message"]["photo"][0]["file_id"]))
         with open(f"data/photo<users>/{callback.to_dict()['message']['photo'][0]['file_id']}.jpg", "wb") as my_file:
             file.File.download(bot.get_file(file_id=callback.to_dict()["message"]["photo"][-1]["file_id"]), out=my_file)
         context.user_data["sell_photo"] = f"data/photo<users>/{callback.to_dict()['message']['photo'][0]['file_id']}.jpg"
@@ -285,17 +277,10 @@ def get_messages(callback, context):
         bot_logic(callback, context)
 
 
-# Напишем соответствующие функции.
-def help(update, context):
-    update.message.reply_text("\n".join(command_list))
-
-
 def main():
     updater = Updater(TOKEN)
     dp = updater.dispatcher
     dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("help", help))
-    dp.add_handler(CommandHandler("get_menu", menu))
     dp.add_handler(CallbackQueryHandler(get_callback))
     dp.add_handler(MessageHandler(filters.Filters.all, get_messages))
     updater.start_polling()
