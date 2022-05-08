@@ -59,10 +59,10 @@ def search_sell_orders(real_user_id, filter, my_tags):
     a = 0
     list = []
     if filter == "мин_цена":
-        for product in db_sess.query(Products).filter(Products.tags == my_tags).order_by(Products.cost.asc()):
+        for product in db_sess.query(Products).filter(Products.tags == my_tags).filter(Products.user_id == real_user_id).order_by(Products.cost.asc()):
             list.append(product)
     elif filter == "макс_цена":
-        for product in db_sess.query(Products).filter(Products.tags == my_tags).order_by(Products.cost.desc()):
+        for product in db_sess.query(Products).filter(Products.tags == my_tags).filter(Products.user_id == real_user_id).order_by(Products.cost.desc()):
             list.append(product)
     db_sess.close()
     return list[0:30]
